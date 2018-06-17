@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article version="5.1" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xila="http://www.w3.org/2001/XInclude/local-attributes"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:trans="http://docbook.org/ns/transclusion"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <info>
+    <title>Программный Продукт "Сапёр"</title>
+
+    <author>
+      <personname><firstname>Игорь</firstname><surname>Болотников</surname></personname>
+
+      <affiliation>
+        <orgname>ДонНТУ</orgname>
+      </affiliation>
+    </author>
+
+    <pubdate>18-06-2018</pubdate>
+  </info>
+
+  <section>
+    <title>Описание продукта</title>
+
+    <para>Программный продукт <emphasis role="bold">Сапёр </emphasis>был
+    разработан для развлечения. Игра содержит в себе поле 12*14 и предназначена
+    для одного игрока.</para>
+  </section>
+
+  <section>
+    <title>Первый запуск</title>
+
+    <para>При первом запуске игры пользователю предоставлено поле и по
+    правилам игры первая клетка не убивает игрока, первый клик, как и последующие обрабатывается следующей
+    функцией:</para>
+
+    <programlisting>function gridclick(y, x) {
+    if (playing) {
+        clicked = true;
+        if (placeflag) {
+            if (shown[y][x] < 3) {
+                var s = shown[y][x];
+                var change = true;
+                if (s == 1) {
+                    flagsleft++;
+                    squaresleft++;
+                }
+                if (flagsleft == 0 && s == 0) {
+                    change = false;
+                }
+                else {
+                    if (s == 2) 
+                        s = 0;
+                    else 
+                        s++;
+                    if (s == 1) {
+                        flagsleft--;
+                        squaresleft--;
+                    }
+                }
+                if (change) {
+                    shown[y][x] = s;
+                    document.images["grd"+y+"_"+x].src = dir + "sqt"+s+".gif";
+                    setStatus();
+                }
+                if (squaresleft == 0) {
+                    document.images.condition.src = dir + "btncool.gif";
+                    playing = false;
+                }
+            }
+        }
+        else if (shown[y][x] != 1) {
+            if (mines[y][x]) {
+                document.images["grd"+y+"_"+x].src = dir + "minered.gif";
+                dead();
+            }
+            else {
+                rollback(y,x);
+            }
+        }
+    }
+}</programlisting>
+
+    <para>При нажатии на кнопку в виде смайлика игра вернётся в первоначальное
+    состояние с пустым полем, функция предоставлена ниже:</para>
+
+    <programlisting>function newgame() {
+    var y;
+    for(y = 0; y < gridy; ++y){
+        mines[y] = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+        shown[y] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    }
+
+    var m;
+    for(m = 0; m < maxmines; ++m) {
+        var x,y;
+        do {
+            x = Math.floor(Math.random() * gridx);
+            y = Math.floor(Math.random() * gridy);
+        } while(mines[y][x]);
+        mines[y][x] = true;
+    }
+    squaresleft = gridy * gridx;
+    flagsleft = maxmines;
+    elapsedtime = 0;
+    playing = true;
+    clicked = false;
+    placeflag = false;
+    buildgrid();
+    if (document.layers) {
+        window.captureEvents(Event.KEYDOWN | Event.KEYUP);
+    }
+    window.onKeyDown = keyDown;
+    window.onKeyUp = keyUp;
+    setInterval("ticker()", 1000);
+}</programlisting>
+
+    <para>У игрока есть шанс проиграть, функция проигрыша предоставлена ниже:</para>
+
+    <programlisting>function dead() {
+    var y, x;
+    for(y = 0; y < gridy; ++y) {
+        for(x = 0; x < gridx; ++x) {
+            if (mines[y][x]) {
+                if (shown[y][x] != 1) {
+                    document.images["grd"+y+"_"+x].src = dir + "mine.gif";
+                }
+            }
+            else if (shown[y][x] == 1) {
+                document.images["grd"+y+"_"+x].src = dir + "nomine.gif";
+            }
+        }
+    }
+    document.images.condition.src = dir + "btndead.gif";
+    playing = false;
+    clicked = false;
+}</programlisting>
+
+    <para>Таким образом, было рассмотрено 3 варианта развития событий, с
+    приведенным кодом.</para>
+  </section>
+</article>
