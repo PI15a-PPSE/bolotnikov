@@ -10,10 +10,13 @@
             var shown = [];
             var gridx, gridy, maxmines;
 
-            gridx = "14";
+            gridx = "12";
             gridy = "14";
             maxmines = "16";
-
+            
+            /**
+            * rendering variables
+            */
             function accepted() {
                 var squaresleft, flagsleft;
                 var elapsedtime;
@@ -21,18 +24,27 @@
                 var placeflag;
                 var clicked;
             }
+
+            /**
+            * Grid variables
+            */
             var gridSq = gridx * 16;
             var grid8 = gridSq - 128;
             var grid16 = gridx - 8;
             var grid32 = grid16 * 8;
             var grid64 = grid16 * 16;
 
+            /**
+            * Menu bar variables
+            */
             var topBarWidth = 8 + grid64;
             var menuBarWidth = 86 + grid64;
-
             var wideWidth = gridx * 16;
             var highHeight = gridy * 16;
 
+            /** 
+            * Buttons
+            */
             var cplLeft = 6 + grid32;
             var cplRight = 4 + grid32;
             var totalWidth = gridSq + 32;
@@ -42,11 +54,19 @@
 
             num=new Array(10);
 
+            /**
+            * Setting timer
+            */
             for (var i=0;i<10;i++) {
                 num[i]=new Image()
                 num[i].src= "" + i+"SW.gif"
             }
 
+            /**
+            * Places flag on the board
+            *
+            * @param var key
+            */
             function keyDown(e) {
                 if(document.layers) {
                     placeflag = (e.modifiers & Event.CONTROL_MASK) > 0;
@@ -57,10 +77,19 @@
                 setStatus();
             }
 
+            /**
+            * Removes flag from the board
+            *
+            * @param var key
+            */
             function keyUp(e) {
                 placeflag = false;
                 setStatus();
             }
+
+            /** 
+            * Starts a new game
+            */
             function newgame() {
 
                 var y;
@@ -93,6 +122,9 @@
                 setInterval("ticker()", 1000);
             }
 
+            /**
+            * Ticks every frame
+            */
             function ticker() {
                 if (playing) {
                     if (clicked) {
@@ -102,6 +134,9 @@
                 }
             }
 
+            /**
+            * Sets status
+            */
             function setStatus() {
                 document.images.elapse3.src= num[elapsedtime-(Math.floor(elapsedtime/10))*10].src;
                 document.images.elapse2.src= num[Math.floor((elapsedtime-(Math. floor(elapsedtime/100))*100)/10)].src;
@@ -110,6 +145,10 @@
                 document.images.flag2.src= num[Math.floor((flagsleft-(Math. floor(flagsleft/100))*100)/10)].src;
                 document.images.flag1.src=num[Math. floor(flagsleft/100)].src;
             }
+
+            /**
+            * Grid builder for HTML
+            */
             function buildgrid() {
                 document.write("<!-- Window --><DIV align=center> "
                     +"<!-- Top Bar --> <table width="
@@ -306,6 +345,12 @@
                 +'/tr></table> </div>');
             }
 
+            /**
+            * Check surroundings
+            *
+            * @param var x x-coordinate
+            * @param var y y-coordinate
+            */
             function surrounding(y,x) {
                 var count = 0;
                 if (y > 0 && x > 0 && mines[y-1][x-1]) 
@@ -327,6 +372,12 @@
                 return count;
             }
 
+            /**
+            * Rollbacks
+            *
+            * @param var x x-coordinate
+            * @param var y y-coordinate
+            */
             function rollback(y,x) {
                 if (y >= 0 && y < gridy && x >=0 && x < gridx) {
                     if (shown[y][x] != 3) {
@@ -348,6 +399,9 @@
                 }
             }
 
+            /**
+            * Game over
+            */
             function dead() {
                 var y, x;
                 for(y = 0; y < gridy; ++y) {
@@ -367,6 +421,12 @@
                 clicked = false;
             }
 
+            /**
+            * Click renderer
+            *
+            * @param var x x-coordinate
+            * @param var y y-coordinate
+            */
             function gridclick(y, x) {
                 if (playing) {
                     clicked = true;
