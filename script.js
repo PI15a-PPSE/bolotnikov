@@ -334,22 +334,30 @@ function buildgrid() {
 */
 function surrounding(y,x) {
     var count = 0;
-    if (y > 0 && x > 0 && mines[y-1][x-1]) 
+    if (y > 0 && x > 0 && mines[y-1][x-1]) {
         count++;
-    if (y > 0 && mines[y-1][x]) 
+    }
+    if (y > 0 && mines[y-1][x]) {
         count++;
-    if (y > 0 && x < gridx-1 && mines[y-1][x+1])
+    }
+    if (y > 0 && x < gridx-1 && mines[y-1][x+1]) {
         count++;
-    if (x > 0 && mines[y][x-1]) 
+    }
+    if (x > 0 && mines[y][x-1]) {
         count++;
-    if (x < gridx-1 && mines[y][x+1]) 
+    }
+    if (x < gridx-1 && mines[y][x+1]) {
         count++;
-    if (y < gridy-1 && x > 0 && mines[y+1][x-1]) 
+    }
+    if (y < gridy-1 && x > 0 && mines[y+1][x-1]) {
         count++;
-    if (y < gridy-1 && mines[y+1][x]) 
+    }
+    if (y < gridy-1 && mines[y+1][x]) {
         count++;
-    if (y < gridy-1 && x < gridx-1 && mines[y+1][x+1]) 
+    }
+    if (y < gridy-1 && x < gridx-1 && mines[y+1][x+1]) {
         count++;
+    }
     return count;
 }
 /**
