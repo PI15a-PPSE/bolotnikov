@@ -331,6 +331,7 @@ function buildgrid() {
 *
 * @param var x x-coordinate
 * @param var y y-coordinate
+* @returns {count} 
 */
 function surrounding(y,x) {
     var count = 0;
